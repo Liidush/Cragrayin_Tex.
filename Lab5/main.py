@@ -1,24 +1,41 @@
-from collections import Counter
+from collections import deque
 
-class AnagramChecker:
-    def are_anagrams(self, s: str, t: str) -> bool:
-        list_s = list(s)
-        list_t = list(t)
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-        print(f"List for string '{s}': {list_s} (ID: {id(list_s)})")
-        print(f"List for string '{t}': {list_t} (ID: {id(list_t)})")
+class Solution:
+    def levelOrder(self, root: TreeNode):
+        if not root:
+            return []
 
-        return Counter(list_s) == Counter(list_t)
+        result = []
+        queue = deque([root])
 
-    def check_anagrams(self):
-        s = input("Enter the first string (s): ")
-        t = input("Enter the second string (t): ")
+        while queue:
+            level_size = len(queue)
+            level_nodes = []
 
-        if self.are_anagrams(s, t):
-            print(f'"{s}" and "{t}" are anagrams.')
-        else:
-            print(f'"{s}" and "{t}" are not anagrams.')
+            for _ in range(level_size):
+                node = queue.popleft()
+                level_nodes.append(node.val)
 
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
 
-checker = AnagramChecker()
-checker.check_anagrams()
+            result.append(level_nodes)
+
+        return result
+    
+root = TreeNode(3)
+root.left = TreeNode(9)
+root.right = TreeNode(20)
+root.right.left = TreeNode(15)
+root.right.right = TreeNode(7)
+
+solution = Solution()
+print(solution.levelOrder(root))
